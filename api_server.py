@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.responses import JSONResponse
 import json
 from orchestrator import run_agent
 
@@ -12,10 +13,17 @@ async def parse(
     schema_content = await schema.read()
     schema_dict = json.loads(schema_content)
 
-    data = await run_agent(schema_dict, files)
+    try:
+        data = await run_agent(schema_dict, files)
+    except ValueError as e:
+        return JSONResponse(
+            status_code=400,
+            content={"status": "error", "data": None, "errors": [{"type": "ValueError", "message": str(e)}]},
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"status": "error", "data": None, "errors": [{"type": type(e).__name__, "message": str(e)}]},
+        )
 
-    return {
-        "status": "success",
-        "data": data,
-        "errors": []
-    }
+    return JSONResponse(status_code=200, content={"status": "success", "data": data, "errors": []})
