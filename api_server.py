@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 import json
-from orchestrator import run_agent
+from ocr.orchestrator import run_agent
 
 app = FastAPI()
 

@@ -1,8 +1,8 @@
-from schema_engine import json_schema_to_pydantic
-from ocr import upload_file, extract, delete_file
-from schema_guard import validate_schema
-from validator import validate
-from utils import semantic_map
+from ocr.schema_engine import json_schema_to_pydantic
+from ocr.agent import upload_file, extract, delete_file
+from ocr.schema_guard import validate_schema
+from ocr.validator import validate
+from ocr.utils import semantic_map
 import asyncio
 
 
@@ -28,7 +28,6 @@ async def run_agent(schema: dict, files: list):
 
         ai_output = await extract(Model, uploaded_files)
 
-        # Apply fuzzy semantic mapping before validation
         mapped = semantic_map(ai_output, Model)
 
         return validate(Model, mapped)

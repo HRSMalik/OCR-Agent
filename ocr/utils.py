@@ -15,7 +15,7 @@ def resolve_openai_file_meta(file: UploadFile) -> OpenAIFileMeta:
     based on FastAPI UploadFile metadata.
     """
     allowed_image_exts = {"png", "jpg", "jpeg", "webp"}
-    allowed_doc_exts = {"pdf", "xls", "xlsx"}
+    allowed_doc_exts = {"pdf", "xls", "xlsx","txt", "doc", "docx"}
     allowed_exts = allowed_image_exts | allowed_doc_exts
     excel_mimes = {
         "application/vnd.ms-excel",
@@ -37,8 +37,6 @@ def resolve_openai_file_meta(file: UploadFile) -> OpenAIFileMeta:
             if ext in allowed_image_exts:
                 return {"purpose": "vision", "input_type": "input_image"}
             return {"purpose": "user_data", "input_type": "input_file"}
-
-    # If we reach here, reject unsupported types explicitly
     raise ValueError("Unsupported file type. Allowed: png, jpg, jpeg, webp, pdf, xls, xlsx")
 
 
@@ -62,7 +60,6 @@ def semantic_map(data: Any, model_class: Any, threshold: int = 70) -> Any:
             ann = None
             if field_info is None:
                 return None
-            # FieldInfo object may be a mapping or object; handle both
             ann = getattr(field_info, "annotation", None)
             if ann is None and isinstance(field_info, dict):
                 ann = field_info.get("annotation")

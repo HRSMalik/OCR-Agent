@@ -1,6 +1,6 @@
 from openai import OpenAI
 from fastapi import UploadFile
-from utils import resolve_openai_file_meta
+from ocr.utils import resolve_openai_file_meta
 import json
 from dotenv import load_dotenv
 import os
@@ -36,7 +36,9 @@ STRICT RULES:
 - Use ONLY the fields defined in the model.
 - Do NOT invent new fields.
 - If a document key is semantically equivalent to a model field,
-  you MUST map it to the closest matching field.
+- You MUST map it to the closest matching field.
+- If a field is similar add the same value to it example if the field is "date" and the document has "document date" use that value for "date"
+  
 
 SEMANTIC MAPPING RULES:
 - Map "date", "document date", or "invoice date" → DocumentDate
